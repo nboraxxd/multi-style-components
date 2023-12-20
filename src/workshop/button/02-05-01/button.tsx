@@ -18,7 +18,7 @@ type ButtonProps = {
 // Tailwind Classes lookup directory
 // ------------------------------
 const baseClasses =
-  'font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 active:translate-y-px disabled:pointer-events-none disabled:opacity-50'
+  'font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px disabled:pointer-events-none disabled:opacity-50'
 
 /*
   ------------------------------
@@ -30,9 +30,23 @@ const baseClasses =
   ------------------------------
 */
 const impactClasses: Record<ButtonProps['tone'], Record<ButtonProps['impact'], string>> = {
-  bold: 'bg-indigo-500 text-white shadow-md hover:bg-indigo-600',
-  light: 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200',
-  none: 'bg-transparent text-indigo-700 hover:bg-indigo-50',
+  default: {
+    bold: 'bg-indigo-500 text-white shadow-md hover:bg-indigo-600 focus-visible:ring-indigo-500 disabled:shadow-none',
+    light: 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200 focus-visible:ring-indigo-500',
+    none: 'bg-transparent text-indigo-700 hover:bg-indigo-50 focus-visible:ring-indigo-500',
+  },
+
+  danger: {
+    bold: 'bg-red-500 text-white shadow-md hover:bg-red-600 focus-visible:ring-red-500 disabled:shadow-none',
+    light: 'bg-red-100 text-red-700 hover:bg-red-200 focus-visible:ring-red-500',
+    none: 'bg-transparent text-red-700 hover:bg-red-50 focus-visible:ring-red-500',
+  },
+
+  success: {
+    bold: 'bg-green-500 text-white shadow-md hover:bg-green-600 focus-visible:ring-green-500 disabled:shadow-none',
+    light: 'bg-green-100 text-green-700 hover:bg-green-200 focus-visible:ring-green-500',
+    none: 'bg-transparent text-green-700 hover:bg-green-50 focus-visible:ring-green-500',
+  },
 }
 
 const sizeClasses: Record<ButtonProps['size'], string> = {
@@ -60,7 +74,7 @@ const Button = ({
   return (
     <button
       {...restProps}
-      className={cx(baseClasses, impactClasses[impact], sizeClasses[size], shapeClasses[shape])}
+      className={cx(baseClasses, impactClasses[tone][impact], sizeClasses[size], shapeClasses[shape])}
     />
   )
 }
