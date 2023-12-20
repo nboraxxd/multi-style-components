@@ -18,5 +18,7 @@
     
     // Wrap style objects in `/*tw*/` before/after comments
     ["/\\*tw\\*/ ([^]*) /\\*tw\\*/", "'([^']*)'"]
-  ]
+  ],
+
+  "github.copilot.editor.enableAutoCompletions": false,
 }

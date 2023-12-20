@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "astro-build.astro-vscode",
-    "cpylua.language-postcss",
     "bradlc.vscode-tailwindcss",
     "esbenp.prettier-vscode",
   ],
