@@ -54,7 +54,11 @@ const sizeClasses: Record<ModalProps['size'], string> = {
   the correct `tone` styles.
   ------------------------------
 */
-const toneClasses: Record<ModalProps['tone'], string> = {}
+const toneClasses: Record<ModalProps['tone'], string> = {
+  default: 'bg-indigo-300',
+  danger: 'bg-red-300',
+  success: 'bg-green-300',
+}
 
 // ---------------------------------
 // Main Component
@@ -77,7 +81,7 @@ export default function Modal({
   return (
     <Dialog open={open} onClose={onClose} className="relative z-10">
       {/* Background overlay */}
-      <div className="fixed inset-0 bg-indigo-300 bg-opacity-75 transition-opacity"></div>
+      <div className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}></div>
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           {/* Modal panel */}
@@ -90,9 +94,7 @@ export default function Modal({
             <div className="bg-white p-4 sm:p-6">
               <div className="text-center sm:text-left">
                 {/* Title */}
-                <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
-                  {title}
-                </Dialog.Title>
+                <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">{title}</Dialog.Title>
 
                 {/* Body */}
                 {children}
@@ -101,11 +103,13 @@ export default function Modal({
 
             {/* Action buttons */}
             <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
-              <Button onClick={actions.confirm.action}>{actions.confirm.label}</Button>
+              <Button onClick={actions.confirm.action} tone={tone}>
+                {actions.confirm.label}
+              </Button>
 
               {/* Only show the cancel button if the action exists */}
               {actions.cancel && (
-                <Button impact="none" onClick={actions.cancel.action}>
+                <Button impact="none" onClick={actions.cancel.action} tone={tone}>
                   {actions.cancel.label}
                 </Button>
               )}
