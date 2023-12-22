@@ -78,9 +78,14 @@ export default function Modal({
   tone = 'default',
   slideFrom = 'top',
 }: ModalProps) {
+  function handleOnCloseDialog() {
+    if (isLoading) return
+    onClose()
+  }
+
   return (
     <Transition.Root show={open} afterLeave={onCloseComplete}>
-      <Dialog onClose={onClose} className="relative z-10">
+      <Dialog onClose={handleOnCloseDialog} className="relative z-10">
         {/* Background overlay */}
         <Transition.Child
           enter="transition ease-out"
@@ -90,9 +95,7 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}
-          ></div>
+          <div className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}></div>
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -115,9 +118,7 @@ export default function Modal({
                 <div className="bg-white p-4 sm:p-6">
                   <div className="text-center sm:text-left">
                     {/* Title */}
-                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
-                      {title}
-                    </Dialog.Title>
+                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">{title}</Dialog.Title>
 
                     {/* Body */}
                     {children}
@@ -126,7 +127,7 @@ export default function Modal({
 
                 {/* Action buttons */}
                 <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
-                  <Button tone={tone} onClick={actions.confirm.action}>
+                  <Button tone={tone} onClick={actions.confirm.action} disabled={isLoading}>
                     <span className="flex items-center gap-3">
                       <span>{actions.confirm.label}</span>
                       {isLoading && <LoadingSpinner />}
@@ -135,7 +136,7 @@ export default function Modal({
 
                   {/* Only show the cancel button if the action exists */}
                   {actions.cancel && (
-                    <Button tone={tone} impact="none" onClick={actions.cancel.action}>
+                    <Button tone={tone} impact="none" onClick={actions.cancel.action} disabled={isLoading}>
                       <span>{actions.cancel.label}</span>
                     </Button>
                   )}
@@ -154,27 +155,14 @@ export default function Modal({
 // ------------------------------
 function LoadingSpinner() {
   return (
-    <Transition
-      appear
-      show={true}
-      enter="transition ease-out"
-      enterFrom="scale-0"
-      enterTo="scale-100"
-    >
+    <Transition appear show={true} enter="transition ease-out" enterFrom="scale-0" enterTo="scale-100">
       <svg
         className="h-5 w-5 animate-spin text-white"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
       >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
         <path
           className="opacity-75"
           fill="currentColor"
