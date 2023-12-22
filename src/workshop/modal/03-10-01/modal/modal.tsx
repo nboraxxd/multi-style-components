@@ -8,11 +8,9 @@ import Button, { ButtonProps } from '../button'
 // Prop types
 // ---------------------------------
 type ModalProps = {
+  status: 'OPEN' | 'CLOSED' | 'LOADING' | 'LOADED'
   onClose: () => void
-  onCloseComplete?: () => void
   title: string
-  open: boolean
-  isLoading?: boolean
   size?: 'small' | 'medium' | 'large'
   tone?: ButtonProps['tone']
   slideFrom?: 'top' | 'right' | 'bottom' | 'left'
@@ -67,19 +65,20 @@ const slideFromClasses: Record<ModalProps['slideFrom'], { from: string; to: stri
 // Main Component
 // ---------------------------------
 export default function Modal({
-  open,
+  status,
   onClose,
-  onCloseComplete = () => {},
   title,
   children,
   actions,
-  isLoading = false,
   size = 'medium',
   tone = 'default',
   slideFrom = 'top',
 }: ModalProps) {
+  const isLoading = status === 'LOADING' || status === 'LOADED'
+  const isOpen = status === 'OPEN' || status === 'LOADING'
+
   return (
-    <Transition.Root show={open} afterLeave={onCloseComplete}>
+    <Transition.Root show={isOpen} afterLeave={onClose}>
       <Dialog onClose={isLoading ? () => {} : onClose} className="relative z-10">
         {/* Background overlay */}
         <Transition.Child
@@ -90,9 +89,7 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}
-          ></div>
+          <div className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}></div>
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -115,9 +112,7 @@ export default function Modal({
                 <div className="bg-white p-4 sm:p-6">
                   <div className="text-center sm:text-left">
                     {/* Title */}
-                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
-                      {title}
-                    </Dialog.Title>
+                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">{title}</Dialog.Title>
 
                     {/* Body */}
                     {children}
@@ -135,12 +130,7 @@ export default function Modal({
 
                   {/* Only show the cancel button if the action exists */}
                   {actions.cancel && (
-                    <Button
-                      disabled={isLoading}
-                      tone={tone}
-                      impact="none"
-                      onClick={actions.cancel.action}
-                    >
+                    <Button disabled={isLoading} tone={tone} impact="none" onClick={actions.cancel.action}>
                       <span>{actions.cancel.label}</span>
                     </Button>
                   )}
@@ -159,27 +149,14 @@ export default function Modal({
 // ------------------------------
 function LoadingSpinner() {
   return (
-    <Transition
-      appear
-      show={true}
-      enter="transition ease-out"
-      enterFrom="scale-0"
-      enterTo="scale-100"
-    >
+    <Transition appear show={true} enter="transition ease-out" enterFrom="scale-0" enterTo="scale-100">
       <svg
         className="h-5 w-5 animate-spin text-white"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
       >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
         <path
           className="opacity-75"
           fill="currentColor"

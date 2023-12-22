@@ -4,26 +4,23 @@ import Modal from './modal'
 import Button from '../button'
 
 export default function ModalDemo() {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [status, setStatus] = React.useState<'CLOSED' | 'OPEN' | 'LOADING' | 'LOADED'>('CLOSED')
 
   function handleConfirm() {
-    setIsLoading(true)
+    setStatus('LOADING')
 
     setTimeout(() => {
-      setIsOpen(false)
+      setStatus('LOADED')
     }, 2000)
   }
 
   return (
     <main>
       <Modal
-        open={isOpen}
-        isLoading={isLoading}
+        status={status}
+        onClose={() => setStatus('CLOSED')}
         slideFrom="top"
         tone="danger"
-        onClose={() => setIsOpen(false)}
-        onCloseComplete={() => setIsLoading(false)}
         title="Delete account permantly"
         actions={{
           confirm: {
@@ -32,14 +29,14 @@ export default function ModalDemo() {
           },
           cancel: {
             label: 'Wow no, stop!',
-            action: () => setIsOpen(false),
+            action: () => setStatus('CLOSED'),
           },
         }}
       >
         <div className="mt-4">
           <p className="text-slate-500">
-            You're about to delete your account permantently. This action cannot be undone. Are you
-            sure you want to do this?
+            You're about to delete your account permantently. This action cannot be undone. Are you sure you want to do
+            this?
           </p>
         </div>
       </Modal>
@@ -49,7 +46,7 @@ export default function ModalDemo() {
         ------------------------------
       */}
       <div className="flex gap-2">
-        <Button tone="danger" impact="light" onClick={() => setIsOpen(true)}>
+        <Button tone="danger" impact="light" onClick={() => setStatus('OPEN')}>
           Open modal
         </Button>
       </div>
