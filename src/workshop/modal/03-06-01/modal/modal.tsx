@@ -70,49 +70,61 @@ export default function Modal({
     ------------------------------
   */
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-10">
-      {/* Background overlay */}
-
-      <div className={cx('fixed inset-0 bg-opacity-75', toneClasses[tone])}></div>
-
-      <div className="fixed inset-0 z-10 overflow-y-auto">
-        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          {/* Modal panel */}
-
-          <Dialog.Panel
-            className={cx(
-              'relative w-full overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8',
-              sizeClasses[size]
-            )}
-          >
-            <div className="bg-white p-4 sm:p-6">
-              <div className="text-center sm:text-left">
-                {/* Title */}
-                <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
-                  {title}
-                </Dialog.Title>
-
-                {/* Body */}
-                {children}
-              </div>
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
-              <Button tone={tone} onClick={actions.confirm.action}>
-                {actions.confirm.label}
-              </Button>
-
-              {/* Only show the cancel button if the action exists */}
-              {actions.cancel && (
-                <Button tone={tone} impact="none" onClick={actions.cancel.action}>
-                  {actions.cancel.label}
-                </Button>
-              )}
-            </div>
-          </Dialog.Panel>
+    <Transition.Root show={open}>
+      <Dialog onClose={onClose} className="relative z-10">
+        {/* Background overlay */}
+        <Transition.Child
+          enter="transition-opacity duration-[250ms]"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-[250ms]"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className={cx('fixed inset-0 bg-opacity-75', toneClasses[tone])}></div>
+        </Transition.Child>
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <Transition.Child
+              enter="transition duration-[250ms] ease-out"
+              enterFrom="translate-y-4 opacity-0"
+              enterTo="translate-y-0 opacity-100"
+              leave="transition duration-[250ms] ease-out"
+              leaveFrom="scale-100 opacity-100"
+              leaveTo="scale-95 opacity-0"
+            >
+              {/* Modal panel */}
+              <Dialog.Panel
+                className={cx(
+                  'relative w-full overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8',
+                  sizeClasses[size]
+                )}
+              >
+                <div className="bg-white p-4 sm:p-6">
+                  <div className="text-center sm:text-left">
+                    {/* Title */}
+                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">{title}</Dialog.Title>
+                    {/* Body */}
+                    {children}
+                  </div>
+                </div>
+                {/* Action buttons */}
+                <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
+                  <Button tone={tone} onClick={actions.confirm.action}>
+                    {actions.confirm.label}
+                  </Button>
+                  {/* Only show the cancel button if the action exists */}
+                  {actions.cancel && (
+                    <Button tone={tone} impact="none" onClick={actions.cancel.action}>
+                      {actions.cancel.label}
+                    </Button>
+                  )}
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
         </div>
-      </div>
-    </Dialog>
+      </Dialog>
+    </Transition.Root>
   )
 }
