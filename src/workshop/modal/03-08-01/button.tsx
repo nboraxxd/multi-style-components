@@ -55,6 +55,7 @@ const Button = ({
   impact = 'bold',
   tone = 'default',
   shape = 'rounded',
+  className,
   ...restProps
 }: ButtonProps & React.ComponentProps<'button'>) => {
   return (
@@ -64,7 +65,8 @@ const Button = ({
         baseClasses,
         impactClasses[tone][impact],
         sizeClasses[size],
-        shapeClasses[shape]
+        shapeClasses[shape],
+        className
       )}
     />
   )

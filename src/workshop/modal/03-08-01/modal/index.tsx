@@ -9,12 +9,14 @@ export default function ModalDemo() {
     1. Create a new `isLoading` piece of state.
     We'll use this to display a spinner. 
   */
+  const [isLoading, setIsLoading] = React.useState(false)
 
   function handleConfirm() {
     /* 
       2. When the `confirm` button is clicked, 
       set `isLoading` to true
     */
+    setIsLoading(true)
 
     /* 
       3. Let's simulate an async operation with a `setTimeout`.
@@ -23,6 +25,7 @@ export default function ModalDemo() {
     // Let's simulate an async operation with a `setTimeout`
     setTimeout(() => {
       // TODO: Close the modal
+      setIsOpen(false)
     }, 2000)
   }
 
@@ -34,6 +37,8 @@ export default function ModalDemo() {
         open={isOpen}
         onClose={() => setIsOpen(false)}
         title="Delete account permantly"
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
         actions={{
           confirm: {
             label: 'Yes, delete my account!',
@@ -47,8 +52,8 @@ export default function ModalDemo() {
       >
         <div className="mt-4">
           <p className="text-slate-500">
-            You're about to delete your account permantently. This action cannot be undone. Are you
-            sure you want to do this?
+            You're about to delete your account permantently. This action cannot be undone. Are you sure you want to do
+            this?
           </p>
         </div>
       </Modal>

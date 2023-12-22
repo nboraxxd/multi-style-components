@@ -15,6 +15,7 @@ type ModalProps = {
   // New prop alert, the `isLoading` prop!
   isLoading?: boolean
   //
+  setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>
 
   size?: 'small' | 'medium' | 'large'
   tone?: ButtonProps['tone']
@@ -75,12 +76,14 @@ export default function Modal({
   title,
   children,
   actions,
+  isLoading,
+  setIsLoading,
   size = 'medium',
   tone = 'default',
   slideFrom = 'top',
 }: ModalProps) {
   return (
-    <Transition.Root show={open}>
+    <Transition.Root show={open} afterLeave={() => setIsLoading(false)}>
       <Dialog onClose={onClose} className="relative z-10">
         {/* Background overlay */}
         <Transition.Child
@@ -91,9 +94,7 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}
-          ></div>
+          <div className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}></div>
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -115,25 +116,19 @@ export default function Modal({
               >
                 <div className="bg-white p-4 sm:p-6">
                   <div className="text-center sm:text-left">
-                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
-                      {title}
-                    </Dialog.Title>
+                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">{title}</Dialog.Title>
                     {children}
                   </div>
                 </div>
 
                 {/* Action buttons */}
                 <div className="flex flex-col gap-2 border-t p-4 sm:flex-row-reverse">
-                  <Button tone={tone} onClick={actions.confirm.action}>
-                    <span className="flex items-center gap-3">
-                      <span>{actions.confirm.label}</span>
-                      {/* 
-                        ------------------------------
-                        TODO: Add loading spinner (scroll below) 
-                        next to the button text when 
-                        `isLoading` is true.
-                        ------------------------------
-                      */}
+                  <Button tone={tone} onClick={actions.confirm.action} className={cx(isLoading ? 'pl-10' : '')}>
+                    <span className="flex items-center justify-center gap-3">
+                      <span className="relative">
+                        {actions.confirm.label}
+                        {isLoading && <LoadingSpinner className="absolute top-1/2 -left-7 -translate-y-1/2" />}
+                      </span>
                     </span>
                   </Button>
 
@@ -155,7 +150,7 @@ export default function Modal({
 // ------------------------------
 // Loading spinner
 // ------------------------------
-function LoadingSpinner() {
+function LoadingSpinner({ className }: { className?: string }) {
   return (
     <Transition
       appear
@@ -163,6 +158,7 @@ function LoadingSpinner() {
       enter="transition ease-out"
       enterFrom="scale-0"
       enterTo="scale-100"
+      className={className}
     >
       <svg
         className="h-5 w-5 animate-spin text-white"
@@ -170,14 +166,7 @@ function LoadingSpinner() {
         fill="none"
         viewBox="0 0 24 24"
       >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
         <path
           className="opacity-75"
           fill="currentColor"
