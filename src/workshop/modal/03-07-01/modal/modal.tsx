@@ -51,7 +51,24 @@ const toneClasses: Record<ModalProps['tone'], string> = {
   with the correct keys and styles.
   ------------------------------
 */
-const slideFromClasses: Record<ModalProps['slideFrom'], { from: string; to: string }> = {}
+const slideFromClasses: Record<ModalProps['slideFrom'], { from: string; to: string }> = {
+  top: {
+    from: '-translate-y-8',
+    to: 'translate-y-0',
+  },
+  right: {
+    from: 'translate-x-8',
+    to: 'translate-x-0',
+  },
+  bottom: {
+    from: 'translate-y-8',
+    to: 'translate-y-0',
+  },
+  left: {
+    from: '-translate-x-8',
+    to: 'translate-x-0',
+  },
+}
 
 // ---------------------------------
 // Main Component
@@ -84,18 +101,16 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}
-          ></div>
+          <div className={cx('fixed inset-0 bg-opacity-75 transition-opacity', toneClasses[tone])}></div>
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="fixed inset-0 z-10 overflow-y-hidden">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             {/* Modal panel */}
             <Transition.Child
               enter="transition ease-out"
-              enterFrom="opacity-0 translate-y-8"
-              enterTo="opacity-100 translate-y-0"
+              enterFrom={cx('opacity-0', slideFromClasses[slideFrom].from)}
+              enterTo={cx('opacity-100', slideFromClasses[slideFrom].to)}
               leave="transition ease-in"
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
@@ -109,9 +124,7 @@ export default function Modal({
                 <div className="bg-white p-4 sm:p-6">
                   <div className="text-center sm:text-left">
                     {/* Title */}
-                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">
-                      {title}
-                    </Dialog.Title>
+                    <Dialog.Title className="text-xl font-semibold leading-6 text-slate-900">{title}</Dialog.Title>
 
                     {/* Body */}
                     {children}
