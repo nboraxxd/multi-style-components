@@ -6,8 +6,11 @@ import { cx } from '~/utils'
 
 export default function CalendarDay({ state, date, bookingAvailabilities }) {
   const ref = React.useRef()
-  const { cellProps, buttonProps, isSelected, isOutsideVisibleRange, isDisabled, formattedDate } =
-    useCalendarCell({ date }, state, ref)
+  const { cellProps, buttonProps, isSelected, isOutsideVisibleRange, isDisabled, formattedDate } = useCalendarCell(
+    { date },
+    state,
+    ref
+  )
 
   // Check if the day is today
   const localTimezone = getLocalTimeZone()
@@ -29,7 +32,7 @@ export default function CalendarDay({ state, date, bookingAvailabilities }) {
     *one status only* at any time.
     ------------------------------
   */
-  type Status = 'SELECTED' | 'STATUS_TWO' | '...' // complete the list based on your observations!
+  type Status = 'SELECTED' | 'DISABLED' | 'VACANCY' | 'NO_VACANCY' | 'TODAY_NO_VACANCY' // complete the list based on your observations!
 
   // ------------------------------
   // Styles lookup dictionary
@@ -62,11 +65,7 @@ export default function CalendarDay({ state, date, bookingAvailabilities }) {
           isDisabled && dynamicClasses.disabled,
           isCurrentDay && !isSelected && dynamicClasses.today,
           hasAvailability && !isDisabled && !isSelected && dynamicClasses.hasAvailability,
-          !hasAvailability &&
-            !isCurrentDay &&
-            !isDisabled &&
-            !isSelected &&
-            dynamicClasses.candidate
+          !hasAvailability && !isCurrentDay && !isDisabled && !isSelected && dynamicClasses.candidate
         )}
       >
         <span>{formattedDate}</span>
