@@ -6,8 +6,11 @@ import { cx } from '~/utils'
 
 export default function CalendarDay({ state, date, bookingAvailabilities }) {
   const ref = React.useRef()
-  const { cellProps, buttonProps, isSelected, isOutsideVisibleRange, isDisabled, formattedDate } =
-    useCalendarCell({ date }, state, ref)
+  const { cellProps, buttonProps, isSelected, isOutsideVisibleRange, isDisabled, formattedDate } = useCalendarCell(
+    { date },
+    state,
+    ref
+  )
 
   // Check if the day is today
   const localTimezone = getLocalTimeZone()
@@ -56,6 +59,12 @@ export default function CalendarDay({ state, date, bookingAvailabilities }) {
     2. the correct, dynamic `statusClasses[status]` classes
     ------------------------------
   */
+  function getStatus(): Status {
+    if (isSelected) return 'SELECTED'
+    if (isDisabled) return 'DISABLED'
+    if (hasAvailability) return 'VACANCY'
+    return isCurrentDay ? 'TODAY_NO_VACANCY' : 'NO_VACANCY'
+  }
 
   return (
     <td {...cellProps}>
@@ -64,7 +73,8 @@ export default function CalendarDay({ state, date, bookingAvailabilities }) {
         ref={ref}
         hidden={isOutsideVisibleRange}
         className={cx(
-          baseClasses
+          baseClasses,
+          statusClasses[getStatus()],
           // isSelected && dynamicClasses.selected,
           // isDisabled && dynamicClasses.disabled,
           // isCurrentDay && !isSelected && dynamicClasses.today,
